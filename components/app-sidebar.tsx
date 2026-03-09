@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import {
   LayoutDashboard,
@@ -9,17 +9,26 @@ import {
   LogOut,
   ChevronsUpDown,
   CircleUserRound,
-} from "lucide-react"
-import Link from "next/link"
-import { usePathname, useRouter } from "next/navigation"
+  ChevronRight,
+  PlusCircle,
+  List,
+  ArrowUpDown,
+} from "lucide-react";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 import {
   Sidebar,
   SidebarContent,
@@ -31,8 +40,11 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
   useSidebar,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
 
 const navItems = [
   {
@@ -46,24 +58,25 @@ const navItems = [
     icon: Users,
   },
   {
-    label: "Modules",
-    href: "/modules",
-    icon: Puzzle,
-  },
-  {
     label: "Compétitions",
     href: "/competitions",
     icon: Trophy,
   },
-]
+];
+
+const moduleSubItems = [
+  { label: "Ajouter", href: "/modules/create", icon: PlusCircle },
+  { label: "Gérer", href: "/modules", icon: List },
+  { label: "Ordre", href: "/modules/order", icon: ArrowUpDown },
+];
 
 function SidebarUserMenu() {
-  const { isMobile } = useSidebar()
-  const router = useRouter()
+  const { isMobile } = useSidebar();
+  const router = useRouter();
 
   function handleLogout() {
     // TODO: appeler la logique de déconnexion ici
-    router.push("/")
+    router.push("/");
   }
 
   return (
@@ -81,7 +94,9 @@ function SidebarUserMenu() {
               </div>
               <div className="flex flex-col gap-0.5 leading-none">
                 <span className="font-medium text-sm">Admin</span>
-                <span className="text-xs text-muted-foreground">admin@mirokai.fr</span>
+                <span className="text-xs text-muted-foreground">
+                  admin@mirokai.fr
+                </span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
@@ -99,10 +114,7 @@ function SidebarUserMenu() {
               </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem
-              variant="destructive"
-              onClick={handleLogout}
-            >
+            <DropdownMenuItem variant="destructive" onClick={handleLogout}>
               <LogOut className="size-4" />
               Se déconnecter
             </DropdownMenuItem>
@@ -110,11 +122,11 @@ function SidebarUserMenu() {
         </DropdownMenu>
       </SidebarMenuItem>
     </SidebarMenu>
-  )
+  );
 }
 
 export function AppSidebar() {
-  const pathname = usePathname()
+  const pathname = usePathname();
 
   return (
     <Sidebar collapsible="icon">
@@ -141,7 +153,54 @@ export function AppSidebar() {
           <SidebarGroupLabel>Navigation</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {navItems.map((item) => (
+              {navItems.slice(0, 2).map((item) => (
+                <SidebarMenuItem key={item.href}>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={pathname === item.href}
+                    tooltip={item.label}
+                  >
+                    <Link href={item.href}>
+                      <item.icon />
+                      <span>{item.label}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+
+              <Collapsible
+                defaultOpen={pathname.startsWith("/modules")}
+                className="group/collapsible"
+              >
+                <SidebarMenuItem>
+                  <CollapsibleTrigger asChild>
+                    <SidebarMenuButton tooltip="Modules">
+                      <Puzzle />
+                      <span>Modules</span>
+                      <ChevronRight className="ml-auto transition-transform group-data-open/collapsible:rotate-90" />
+                    </SidebarMenuButton>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent>
+                    <SidebarMenuSub>
+                      {moduleSubItems.map((sub) => (
+                        <SidebarMenuSubItem key={sub.href}>
+                          <SidebarMenuSubButton
+                            asChild
+                            isActive={pathname === sub.href}
+                          >
+                            <Link href={sub.href}>
+                              <sub.icon />
+                              <span>{sub.label}</span>
+                            </Link>
+                          </SidebarMenuSubButton>
+                        </SidebarMenuSubItem>
+                      ))}
+                    </SidebarMenuSub>
+                  </CollapsibleContent>
+                </SidebarMenuItem>
+              </Collapsible>
+
+              {navItems.slice(2).map((item) => (
                 <SidebarMenuItem key={item.href}>
                   <SidebarMenuButton
                     asChild
@@ -164,5 +223,5 @@ export function AppSidebar() {
         <SidebarUserMenu />
       </SidebarFooter>
     </Sidebar>
-  )
+  );
 }
