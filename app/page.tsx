@@ -37,6 +37,9 @@ export default function Home() {
         throw new Error(data?.message ?? "Identifiants incorrects");
       }
 
+      const data = await res.json();
+      document.cookie = `admin_token=${data.access_token}; path=/; max-age=${7 * 24 * 60 * 60}; SameSite=Strict`;
+
       router.push("/dashboard");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erreur inconnue");

@@ -1,16 +1,20 @@
+import { cookies } from "next/headers";
 import { CreateUserDialog } from "@/components/users/create-user-dialog";
 import { User, UserColumns } from "@/components/users/user-columns";
 import { UserDataTable } from "@/components/users/user-data-table";
 
 async function getData(): Promise<User[]> {
+  const token = (await cookies()).get("admin_token")?.value;
   const result = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user`, {
     method: "GET",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
     cache: "no-store",
   });
-
-  const data = await result.json();
-  return data;
+  if (!result.ok) return [];
+  return result.json();
 }
 
 export default async function UserPage() {

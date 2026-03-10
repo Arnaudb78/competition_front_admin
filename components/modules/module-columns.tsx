@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Pencil } from "lucide-react";
 import Link from "next/link";
+import { apiFetch } from "@/lib/api";
 
 export type Module = {
   _id: string;
@@ -27,9 +28,8 @@ function VisibleSwitch({ id, isVisible }: { id: string; isVisible: boolean }) {
       checked={checked}
       onCheckedChange={async (value) => {
         setChecked(value);
-        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/modules/${id}`, {
+        await apiFetch(`/modules/${id}`, {
           method: "PATCH",
-          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ isVisible: value }),
         });
       }}

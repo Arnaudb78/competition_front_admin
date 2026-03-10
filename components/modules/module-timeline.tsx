@@ -21,6 +21,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { Module } from "@/components/modules/module-columns";
+import { apiFetch } from "@/lib/api";
 
 const MEDIA_ICONS: Record<Module["mediaType"], React.ReactNode> = {
   video: <Film className="size-4" />,
@@ -126,9 +127,8 @@ export function ModuleTimeline({ initialModules }: { initialModules: Module[] })
   async function handleSave() {
     setSaving(true);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/modules/reorder`, {
+      const res = await apiFetch(`/modules/reorder`, {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ids: modules.map((m) => m._id) }),
       });
 

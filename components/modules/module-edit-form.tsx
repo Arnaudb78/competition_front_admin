@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
 import { Module } from "@/components/modules/module-columns";
+import { apiFetch } from "@/lib/api";
 
 type MediaType = "audio" | "video" | "image" | "none";
 
@@ -70,9 +71,7 @@ async function uploadFile(
   folder: "images" | "videos" | "audios",
 ): Promise<string> {
   const params = new URLSearchParams({ filename: file.name, contentType: file.type });
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/upload/${folder}/presign?${params}`,
-  );
+  const res = await apiFetch(`/upload/${folder}/presign?${params}`);
   const { presignedUrl, url } = await res.json();
   await fetch(presignedUrl, {
     method: "PUT",
@@ -146,19 +145,15 @@ export function ModuleEditForm({ module }: { module: Module }) {
 
       const allImages = [...existingImages, ...uploadedNewImages];
 
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/modules/${module._id}`,
-        {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            name,
-            cartel,
-            ...(mediaUrl && { mediaUrl }),
-            images: allImages,
-          }),
-        },
-      );
+      const res = await apiFetch(`/modules/${module._id}`, {
+        method: "PATCH",
+        body: JSON.stringify({
+          name,
+          cartel,
+          ...(mediaUrl && { mediaUrl }),
+          images: allImages,
+        }),
+      });
 
       if (!res.ok) {
         toast.error("Une erreur est survenue lors de la mise à jour.");

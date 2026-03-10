@@ -1,9 +1,12 @@
+import { cookies } from "next/headers";
 import { ModuleTimeline } from "@/components/modules/module-timeline";
 import { Module } from "@/components/modules/module-columns";
 
 async function getModules(): Promise<Module[]> {
+  const token = (await cookies()).get("admin_token")?.value;
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/modules/all`, {
     cache: "no-store",
+    headers: { Authorization: `Bearer ${token}` },
   });
   if (!res.ok) return [];
   const data: Module[] = await res.json();

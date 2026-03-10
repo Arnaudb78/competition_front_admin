@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { apiFetch } from "@/lib/api";
 
 type MediaType = "audio" | "video" | "none";
 
@@ -135,9 +136,7 @@ export default function CreateModulePage() {
       filename: file.name,
       contentType: file.type,
     });
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/upload/${folder}/presign?${params}`,
-    );
+    const res = await apiFetch(`/upload/${folder}/presign?${params}`);
     const { presignedUrl, url } = await res.json();
 
     // 2. Upload direct navigateur → S3
@@ -165,9 +164,8 @@ export default function CreateModulePage() {
         form.images.map((img) => uploadFile(img.file, "images")),
       );
 
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/modules`, {
+      const res = await apiFetch(`/modules`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           number: Number(form.number),
           name: form.name,

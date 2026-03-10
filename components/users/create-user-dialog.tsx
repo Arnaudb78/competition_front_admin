@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { UserPlus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { apiFetch } from "@/lib/api";
 import {
   Dialog,
   DialogContent,
@@ -46,9 +47,8 @@ export function CreateUserDialog() {
     setError(null);
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user`, {
+      const res = await apiFetch(`/user`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
 

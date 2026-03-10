@@ -76,7 +76,7 @@ function SidebarUserMenu() {
   const router = useRouter();
 
   function handleLogout() {
-    // TODO: appeler la logique de déconnexion ici
+    document.cookie = "admin_token=; path=/; max-age=0";
     router.push("/");
   }
 

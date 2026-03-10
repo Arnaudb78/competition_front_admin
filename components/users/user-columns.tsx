@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { Switch } from "@/components/ui/switch";
+import { apiFetch } from "@/lib/api";
 
 function ActiveSwitch({ id, isActive }: { id: string; isActive: boolean }) {
   const [checked, setChecked] = useState(isActive);
@@ -12,9 +13,8 @@ function ActiveSwitch({ id, isActive }: { id: string; isActive: boolean }) {
       checked={checked}
       onCheckedChange={async (value) => {
         setChecked(value);
-        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/${id}`, {
+        await apiFetch(`/user/${id}`, {
           method: "PATCH",
-          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ isActive: value }),
         });
       }}
