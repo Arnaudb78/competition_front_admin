@@ -13,6 +13,7 @@ import {
   PlusCircle,
   List,
   ArrowUpDown,
+  CalendarDays,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -56,6 +57,11 @@ const navItems = [
     label: "Utilisateurs",
     href: "/users",
     icon: Users,
+  },
+  {
+    label: "Événements",
+    href: "/events",
+    icon: CalendarDays,
   },
 ];
 
@@ -193,7 +199,7 @@ export function AppSidebar() {
                 <SidebarMenuItem key={item.href}>
                   <SidebarMenuButton
                     asChild
-                    isActive={pathname === item.href}
+                    isActive={pathname === item.href || pathname.startsWith(item.href + "/")}
                     tooltip={item.label}
                   >
                     <Link href={item.href}>
