@@ -19,6 +19,9 @@ export default function AuthenticatedLayout({
         <main className="flex flex-1 flex-col gap-4 p-6 md:p-8">
           {children}
         </main>
+        <footer className="border-t px-6 py-4 text-center text-xs text-muted-foreground">
+          Built by <span className="font-medium text-foreground">Group 2</span> with 🫶
+        </footer>
       </SidebarInset>
     </SidebarProvider>
     <Toaster />
