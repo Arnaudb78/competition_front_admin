@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { UserPlus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -29,6 +30,7 @@ const defaultForm: CreateUserForm = {
 };
 
 export function CreateUserDialog() {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState<CreateUserForm>(defaultForm);
   const [loading, setLoading] = useState(false);
@@ -57,6 +59,7 @@ export function CreateUserDialog() {
 
       setForm(defaultForm);
       setOpen(false);
+      router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erreur inconnue");
     } finally {

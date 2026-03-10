@@ -6,6 +6,7 @@ async function getData(): Promise<User[]> {
   const result = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user`, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
+    cache: "no-store",
   });
 
   const data = await result.json();
