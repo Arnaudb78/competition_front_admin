@@ -57,11 +57,6 @@ const navItems = [
     href: "/users",
     icon: Users,
   },
-  {
-    label: "Compétitions",
-    href: "/competitions",
-    icon: Trophy,
-  },
 ];
 
 const moduleSubItems = [
