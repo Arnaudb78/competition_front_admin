@@ -102,12 +102,6 @@ function SidebarUserMenu() {
             sideOffset={4}
             className="w-56"
           >
-            <DropdownMenuItem asChild>
-              <Link href="/settings">
-                <Settings className="size-4" />
-                Paramètres
-              </Link>
-            </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem variant="destructive" onClick={handleLogout}>
               <LogOut className="size-4" />
