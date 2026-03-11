@@ -79,10 +79,13 @@ export function ModuleMapEditor({ modules }: { modules: MapModule[] }) {
       await Promise.all(
         modules.map((m) => {
           const pos = positions[m._id];
-          if (pos === undefined) return Promise.resolve();
           return apiFetch(`/modules/${m._id}`, {
             method: "PATCH",
-            body: JSON.stringify({ mapX: pos.x, mapY: pos.y }),
+            body: JSON.stringify(
+              pos !== undefined
+                ? { mapX: pos.x, mapY: pos.y }
+                : { mapX: null, mapY: null },
+            ),
           });
         }),
       );
