@@ -1,36 +1,145 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Mirokaï Experience — Interface Admin
 
-## Getting Started
+Dashboard d'administration pour gérer les contenus de la Mirokaï Experience.
+Construit avec **Next.js 15** (App Router), **Tailwind CSS** et **shadcn/ui**.
 
-First, run the development server:
+> **Desktop uniquement.** Cette interface est conçue pour une utilisation sur ordinateur par les équipes admin.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+## Fonctionnalités
+
+- Créer, modifier et supprimer des **modules** d'exposition
+- Uploader des **médias** (vidéo, audio, images) vers AWS S3
+- Placer les modules sur le **plan interactif** par drag & drop
+- Gérer la visibilité de chaque module
+
+---
+
+## Architecture
+
+```
+front-admin-mirokai/
+├── app/
+│   └── (authenticated)/
+│       ├── modules/
+│       │   ├── page.tsx         → Liste des modules
+│       │   ├── create/          → Création d'un module
+│       │   ├── [id]/edit/       → Modification d'un module
+│       │   └── map/             → Éditeur de plan (drag & drop)
+│       └── layout.tsx
+├── components/
+│   ├── modules/
+│   │   ├── module-edit-form.tsx → Formulaire d'édition
+│   │   └── module-map-editor.tsx → Éditeur de plan
+│   └── ui/                      → Composants shadcn/ui
+└── lib/
+    └── api.ts                   → Client HTTP (avec auth JWT)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Prérequis
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Node.js** 20+
+- **pnpm** — `npm install -g pnpm`
+- Le [backend](../back-project) lancé (local ou production)
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## Installation
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+git clone <url-du-repo>
+cd front-admin-mirokai
+pnpm install
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## Configuration
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Créer un fichier `.env.local` à la racine :
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```env
+NEXT_PUBLIC_API_URL=http://localhost:3001/api
+```
+
+En production, remplacer par l'URL de l'API déployée.
+
+---
+
+## Lancer en développement
+
+```bash
+pnpm dev
+```
+
+Ouvrir `http://localhost:3000`
+
+---
+
+## Guide d'utilisation
+
+### 1. Connexion
+
+Se connecter avec les identifiants admin créés en base de données.
+
+### 2. Créer un module
+
+Aller dans **Modules → Ajouter un module** et remplir :
+
+| Champ | Description |
+|---|---|
+| Numéro | Identifiant unique affiché sur le plan (ex : `1`) |
+| Nom | Titre du module affiché aux visiteurs |
+| Cartel | Texte descriptif affiché lors de la visite |
+| Type de média | `Aucun`, `Vidéo` ou `Audio` |
+| Fichier média | Vidéo ou audio uploadé vers S3 |
+| Images | Photos supplémentaires (grille) |
+| Visible | Active/désactive l'affichage aux visiteurs |
+
+### 3. Placer les modules sur le plan
+
+Aller dans **Modules → Plan** :
+- Glisser-déposer chaque module sur le plan de l'expérience
+- Les positions sont sauvegardées en pourcentage (0–1) pour s'adapter à toutes les tailles d'écran
+- Cliquer **Sauvegarder le plan** pour enregistrer
+
+---
+
+## Exemple de module complet
+
+```json
+{
+  "number": 3,
+  "name": "L'Atelier des Créateurs",
+  "cartel": "Dans cet espace, découvrez comment les robots apprennent à créer...",
+  "mediaType": "video",
+  "mediaUrl": "https://bucket.s3.eu-west-3.amazonaws.com/videos/atelier.mp4",
+  "images": [
+    "https://bucket.s3.eu-west-3.amazonaws.com/images/atelier1.jpg",
+    "https://bucket.s3.eu-west-3.amazonaws.com/images/atelier2.jpg"
+  ],
+  "mapX": 0.62,
+  "mapY": 0.45,
+  "isVisible": true
+}
+```
+
+---
+
+## Build & déploiement
+
+```bash
+pnpm build
+pnpm start
+```
+
+### Variables d'environnement en production
+
+```env
+NEXT_PUBLIC_API_URL=https://api.mirokai-experience.fr/api
+```
+
+> L'application est optimisée pour une utilisation sur desktop (résolution minimum recommandée : 1280px).
