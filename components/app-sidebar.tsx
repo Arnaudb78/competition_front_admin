@@ -49,26 +49,8 @@ import {
 } from "@/components/ui/sidebar";
 
 const navItems = [
-  {
-    label: "Dashboard",
-    href: "/dashboard",
-    icon: LayoutDashboard,
-  },
-  {
-    label: "Utilisateurs",
-    href: "/users",
-    icon: Users,
-  },
-  {
-    label: "Questions",
-    href: "/questions",
-    icon: HelpCircle,
-  },
-  {
-    label: "Événements",
-    href: "/events",
-    icon: CalendarDays,
-  },
+  { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+  { label: "Utilisateurs", href: "/users", icon: Users },
 ];
 
 const moduleSubItems = [
@@ -81,6 +63,12 @@ const moduleSubItems = [
 const mediaSubItems = [
   { label: "Replays", href: "/media/replays", icon: List },
   { label: "Clips", href: "/media/clips", icon: List },
+];
+
+const eventSubItems = [
+  { label: "Liste & gestion", href: "/events/list", icon: List },
+  { label: "Créer", href: "/events/create", icon: PlusCircle },
+  { label: "Analytiques", href: "/events", icon: CalendarDays },
 ];
 
 function SidebarUserMenu() {
@@ -240,23 +228,52 @@ export function AppSidebar() {
                 </SidebarMenuItem>
               </Collapsible>
 
-              {navItems.slice(2).map((item) => (
-                <SidebarMenuItem key={item.href}>
-                  <SidebarMenuButton
-                    asChild
-                    isActive={
-                      pathname === item.href ||
-                      pathname.startsWith(item.href + "/")
-                    }
-                    tooltip={item.label}
-                  >
-                    <Link href={item.href}>
-                      <item.icon />
-                      <span>{item.label}</span>
-                    </Link>
-                  </SidebarMenuButton>
+              {/* Questions */}
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  isActive={pathname.startsWith("/questions")}
+                  tooltip="Questions"
+                >
+                  <Link href="/questions">
+                    <HelpCircle />
+                    <span>Questions</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+
+              {/* Événements collapsible */}
+              <Collapsible
+                defaultOpen={pathname.startsWith("/events")}
+                className="group/collapsible"
+              >
+                <SidebarMenuItem>
+                  <CollapsibleTrigger asChild>
+                    <SidebarMenuButton tooltip="Événements">
+                      <CalendarDays />
+                      <span>Événements</span>
+                      <ChevronRight className="ml-auto transition-transform group-data-open/collapsible:rotate-90" />
+                    </SidebarMenuButton>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent>
+                    <SidebarMenuSub>
+                      {eventSubItems.map((sub) => (
+                        <SidebarMenuSubItem key={sub.href}>
+                          <SidebarMenuSubButton
+                            asChild
+                            isActive={pathname === sub.href}
+                          >
+                            <Link href={sub.href}>
+                              <sub.icon />
+                              <span>{sub.label}</span>
+                            </Link>
+                          </SidebarMenuSubButton>
+                        </SidebarMenuSubItem>
+                      ))}
+                    </SidebarMenuSub>
+                  </CollapsibleContent>
                 </SidebarMenuItem>
-              ))}
+              </Collapsible>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
