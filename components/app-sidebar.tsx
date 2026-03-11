@@ -4,8 +4,6 @@ import {
   LayoutDashboard,
   Users,
   Puzzle,
-  Trophy,
-  Settings,
   LogOut,
   ChevronsUpDown,
   CircleUserRound,
@@ -14,6 +12,7 @@ import {
   List,
   ArrowUpDown,
   CalendarDays,
+  Target,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -69,6 +68,7 @@ const moduleSubItems = [
   { label: "Ajouter", href: "/modules/create", icon: PlusCircle },
   { label: "Gérer", href: "/modules", icon: List },
   { label: "Ordre", href: "/modules/order", icon: ArrowUpDown },
+  { label: "Plan", href: "/modules/map", icon: Target },
 ];
 
 function SidebarUserMenu() {
@@ -199,7 +199,10 @@ export function AppSidebar() {
                 <SidebarMenuItem key={item.href}>
                   <SidebarMenuButton
                     asChild
-                    isActive={pathname === item.href || pathname.startsWith(item.href + "/")}
+                    isActive={
+                      pathname === item.href ||
+                      pathname.startsWith(item.href + "/")
+                    }
                     tooltip={item.label}
                   >
                     <Link href={item.href}>
