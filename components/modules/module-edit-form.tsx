@@ -70,14 +70,10 @@ async function uploadFile(
   file: File,
   folder: "images" | "videos" | "audios",
 ): Promise<string> {
-  const params = new URLSearchParams({ filename: file.name, contentType: file.type });
-  const res = await apiFetch(`/upload/${folder}/presign?${params}`);
-  const { presignedUrl, url } = await res.json();
-  await fetch(presignedUrl, {
-    method: "PUT",
-    headers: { "Content-Type": file.type },
-    body: file,
-  });
+  const body = new FormData();
+  body.append("file", file);
+  const res = await apiFetch(`/upload/${folder}`, { method: "POST", body });
+  const { url } = await res.json();
   return url;
 }
 
