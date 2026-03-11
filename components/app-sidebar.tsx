@@ -14,6 +14,7 @@ import {
   CalendarDays,
   Target,
   HelpCircle,
+  Video,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -75,6 +76,11 @@ const moduleSubItems = [
   { label: "Gérer", href: "/modules", icon: List },
   { label: "Ordre", href: "/modules/order", icon: ArrowUpDown },
   { label: "Plan", href: "/modules/map", icon: Target },
+];
+
+const mediaSubItems = [
+  { label: "Replays", href: "/media/replays", icon: List },
+  { label: "Clips", href: "/media/clips", icon: List },
 ];
 
 function SidebarUserMenu() {
@@ -188,6 +194,39 @@ export function AppSidebar() {
                           <SidebarMenuSubButton
                             asChild
                             isActive={pathname === sub.href}
+                          >
+                            <Link href={sub.href}>
+                              <sub.icon />
+                              <span>{sub.label}</span>
+                            </Link>
+                          </SidebarMenuSubButton>
+                        </SidebarMenuSubItem>
+                      ))}
+                    </SidebarMenuSub>
+                  </CollapsibleContent>
+                </SidebarMenuItem>
+              </Collapsible>
+
+              {/* Média */}
+              <Collapsible
+                defaultOpen={pathname.startsWith("/media")}
+                className="group/collapsible"
+              >
+                <SidebarMenuItem>
+                  <CollapsibleTrigger asChild>
+                    <SidebarMenuButton tooltip="Média">
+                      <Video />
+                      <span>Média</span>
+                      <ChevronRight className="ml-auto transition-transform group-data-open/collapsible:rotate-90" />
+                    </SidebarMenuButton>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent>
+                    <SidebarMenuSub>
+                      {mediaSubItems.map((sub) => (
+                        <SidebarMenuSubItem key={sub.href}>
+                          <SidebarMenuSubButton
+                            asChild
+                            isActive={pathname.startsWith(sub.href)}
                           >
                             <Link href={sub.href}>
                               <sub.icon />

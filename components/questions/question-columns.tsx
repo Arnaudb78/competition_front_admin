@@ -36,11 +36,7 @@ function QuestionActions({ question }: { question: Question }) {
 
   return (
     <div className="flex items-center gap-1">
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={() => setEditOpen(true)}
-      >
+      <Button variant="ghost" size="icon" onClick={() => setEditOpen(true)}>
         <Pencil className="size-4" />
       </Button>
       <Button
@@ -68,7 +64,7 @@ export const QuestionColumns: ColumnDef<Question>[] = [
       row.getValue("ageGroup") === "child" ? (
         <Badge variant="outline">− 12 ans</Badge>
       ) : (
-        <Badge>+ 12 ans</Badge>
+        <Badge variant="destructive">+ 12 ans</Badge>
       ),
   },
   {
