@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Pencil } from "lucide-react";
 import Link from "next/link";
 import { apiFetch } from "@/lib/api";
+import { Question } from "@/components/questions/question-columns";
 
 export type Module = {
   _id: string;
@@ -18,6 +19,8 @@ export type Module = {
   mediaUrl?: string;
   images: string[];
   isVisible: boolean;
+  childQuestion?: Question;
+  adultQuestion?: Question;
 };
 
 function VisibleSwitch({ id, isVisible }: { id: string; isVisible: boolean }) {

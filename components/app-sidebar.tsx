@@ -13,6 +13,7 @@ import {
   ArrowUpDown,
   CalendarDays,
   Target,
+  HelpCircle,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -56,6 +57,11 @@ const navItems = [
     label: "Utilisateurs",
     href: "/users",
     icon: Users,
+  },
+  {
+    label: "Questions",
+    href: "/questions",
+    icon: HelpCircle,
   },
   {
     label: "Événements",
