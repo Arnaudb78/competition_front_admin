@@ -1,18 +1,22 @@
 # Mirokaï Experience — Interface Admin
 
-Dashboard d'administration pour gérer les contenus de la Mirokaï Experience.
+Dashboard d'administration pour gérer l'ensemble des contenus de la Mirokaï Experience.
 Construit avec **Next.js 15** (App Router), **Tailwind CSS** et **shadcn/ui**.
 
-> **Desktop uniquement.** Cette interface est conçue pour une utilisation sur ordinateur par les équipes admin.
+> **Desktop uniquement.** Interface conçue pour ordinateur (résolution minimum recommandée : 1280px).
+
+**URL de production :** https://admin.xn--miroka-experience-jwb.fr/
 
 ---
 
 ## Fonctionnalités
 
-- Créer, modifier et supprimer des **modules** d'exposition
-- Uploader des **médias** (vidéo, audio, images) vers AWS S3
-- Placer les modules sur le **plan interactif** par drag & drop
-- Gérer la visibilité de chaque module
+- Gérer les **modules** d'exposition (CRUD, upload média S3, placement sur plan, réordonnancement)
+- Gérer les **challenges** et leurs questions (quiz pour les membres)
+- Gérer les **événements** avec analytics par type (Experience, Afterwork, Talks)
+- Gérer les **médias** : replays vidéo et clips courts
+- Gérer les **utilisateurs admin**
+- Gérer la banque de **questions**
 
 ---
 
@@ -21,20 +25,45 @@ Construit avec **Next.js 15** (App Router), **Tailwind CSS** et **shadcn/ui**.
 ```
 front-admin-mirokai/
 ├── app/
+│   ├── page.tsx                    → Page de connexion
+│   ├── layout.tsx                  → Layout racine
 │   └── (authenticated)/
+│       ├── layout.tsx              → Layout protégé (sidebar + auth check)
+│       ├── dashboard/              → Tableau de bord
 │       ├── modules/
-│       │   ├── page.tsx         → Liste des modules
-│       │   ├── create/          → Création d'un module
-│       │   ├── [id]/edit/       → Modification d'un module
-│       │   └── map/             → Éditeur de plan (drag & drop)
-│       └── layout.tsx
+│       │   ├── page.tsx            → Liste des modules
+│       │   ├── create/             → Création
+│       │   ├── [id]/               → Édition
+│       │   ├── map/                → Éditeur plan (drag & drop)
+│       │   └── order/              → Réordonnancement
+│       ├── challenges/
+│       │   ├── page.tsx            → Liste des challenges
+│       │   ├── create/             → Création
+│       │   └── [id]/               → Édition + questions
+│       ├── events/
+│       │   ├── page.tsx            → Analytics globaux
+│       │   ├── list/               → Gestion des événements
+│       │   ├── create/             → Création
+│       │   ├── experience/         → Analytics Mirokaï Experience
+│       │   ├── afterwork/          → Analytics Robot Drinks / Afterwork
+│       │   └── talks/              → Analytics Enchanted Talks
+│       ├── media/
+│       │   ├── replays/            → CRUD replays vidéo
+│       │   └── clips/              → CRUD clips courts
+│       ├── users/                  → Gestion des admins
+│       └── questions/              → Banque de questions
 ├── components/
-│   ├── modules/
-│   │   ├── module-edit-form.tsx → Formulaire d'édition
-│   │   └── module-map-editor.tsx → Éditeur de plan
-│   └── ui/                      → Composants shadcn/ui
+│   ├── app-sidebar.tsx             → Navigation principale
+│   ├── modules/                    → Formulaires et éditeurs modules
+│   ├── challenges/                 → Formulaires challenges
+│   ├── events/                     → Composants events & analytics
+│   ├── media/                      → Composants replays & clips
+│   ├── questions/                  → Composants questions
+│   ├── users/                      → Composants utilisateurs
+│   └── ui/                         → Composants shadcn/ui
 └── lib/
-    └── api.ts                   → Client HTTP (avec auth JWT)
+    ├── api.ts                      → Client HTTP (auth JWT cookie)
+    └── utils.ts                    → Utilitaires
 ```
 
 ---
@@ -43,7 +72,7 @@ front-admin-mirokai/
 
 - **Node.js** 20+
 - **pnpm** — `npm install -g pnpm`
-- Le [backend](../back-project) lancé (local ou production)
+- Le [backend](https://github.com/Arnaudb78/competition_project_back) lancé (local ou production)
 
 ---
 
@@ -65,8 +94,6 @@ Créer un fichier `.env.local` à la racine :
 NEXT_PUBLIC_API_URL=http://localhost:3001/api
 ```
 
-En production, remplacer par l'URL de l'API déployée.
-
 ---
 
 ## Lancer en développement
@@ -76,56 +103,6 @@ pnpm dev
 ```
 
 Ouvrir `http://localhost:3000`
-
----
-
-## Guide d'utilisation
-
-### 1. Connexion
-
-Se connecter avec les identifiants admin créés en base de données.
-
-### 2. Créer un module
-
-Aller dans **Modules → Ajouter un module** et remplir :
-
-| Champ | Description |
-|---|---|
-| Numéro | Identifiant unique affiché sur le plan (ex : `1`) |
-| Nom | Titre du module affiché aux visiteurs |
-| Cartel | Texte descriptif affiché lors de la visite |
-| Type de média | `Aucun`, `Vidéo` ou `Audio` |
-| Fichier média | Vidéo ou audio uploadé vers S3 |
-| Images | Photos supplémentaires (grille) |
-| Visible | Active/désactive l'affichage aux visiteurs |
-
-### 3. Placer les modules sur le plan
-
-Aller dans **Modules → Plan** :
-- Glisser-déposer chaque module sur le plan de l'expérience
-- Les positions sont sauvegardées en pourcentage (0–1) pour s'adapter à toutes les tailles d'écran
-- Cliquer **Sauvegarder le plan** pour enregistrer
-
----
-
-## Exemple de module complet
-
-```json
-{
-  "number": 3,
-  "name": "L'Atelier des Créateurs",
-  "cartel": "Dans cet espace, découvrez comment les robots apprennent à créer...",
-  "mediaType": "video",
-  "mediaUrl": "https://bucket.s3.eu-west-3.amazonaws.com/videos/atelier.mp4",
-  "images": [
-    "https://bucket.s3.eu-west-3.amazonaws.com/images/atelier1.jpg",
-    "https://bucket.s3.eu-west-3.amazonaws.com/images/atelier2.jpg"
-  ],
-  "mapX": 0.62,
-  "mapY": 0.45,
-  "isVisible": true
-}
-```
 
 ---
 
@@ -141,5 +118,3 @@ pnpm start
 ```env
 NEXT_PUBLIC_API_URL=https://api.mirokai-experience.fr/api
 ```
-
-> L'application est optimisée pour une utilisation sur desktop (résolution minimum recommandée : 1280px).
