@@ -15,6 +15,7 @@ import {
   Target,
   HelpCircle,
   Video,
+  Trophy,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -69,6 +70,11 @@ const eventSubItems = [
   { label: "Liste & gestion", href: "/events/list", icon: List },
   { label: "Créer", href: "/events/create", icon: PlusCircle },
   { label: "Analytiques", href: "/events", icon: CalendarDays },
+];
+
+const challengeSubItems = [
+  { label: "Ajouter", href: "/challenges/create", icon: PlusCircle },
+  { label: "Gérer", href: "/challenges", icon: List },
 ];
 
 function SidebarUserMenu() {
@@ -258,6 +264,39 @@ export function AppSidebar() {
                   <CollapsibleContent>
                     <SidebarMenuSub>
                       {eventSubItems.map((sub) => (
+                        <SidebarMenuSubItem key={sub.href}>
+                          <SidebarMenuSubButton
+                            asChild
+                            isActive={pathname === sub.href}
+                          >
+                            <Link href={sub.href}>
+                              <sub.icon />
+                              <span>{sub.label}</span>
+                            </Link>
+                          </SidebarMenuSubButton>
+                        </SidebarMenuSubItem>
+                      ))}
+                    </SidebarMenuSub>
+                  </CollapsibleContent>
+                </SidebarMenuItem>
+              </Collapsible>
+
+              {/* Challenges collapsible */}
+              <Collapsible
+                defaultOpen={pathname.startsWith("/challenges")}
+                className="group/collapsible"
+              >
+                <SidebarMenuItem>
+                  <CollapsibleTrigger asChild>
+                    <SidebarMenuButton tooltip="Challenges">
+                      <Trophy />
+                      <span>Challenges</span>
+                      <ChevronRight className="ml-auto transition-transform group-data-open/collapsible:rotate-90" />
+                    </SidebarMenuButton>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent>
+                    <SidebarMenuSub>
+                      {challengeSubItems.map((sub) => (
                         <SidebarMenuSubItem key={sub.href}>
                           <SidebarMenuSubButton
                             asChild
