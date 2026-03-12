@@ -20,6 +20,7 @@ const defaultAnswers = [
   { text: "", isCorrect: true },
   { text: "", isCorrect: false },
   { text: "", isCorrect: false },
+  { text: "", isCorrect: false },
 ];
 
 interface Props {
@@ -88,6 +89,8 @@ export function CreateQuestionDialog({ open, onOpenChange, question }: Props) {
             body: JSON.stringify(payload),
           });
 
+      console.log(await res.json());
+
       if (!res.ok) {
         const data = await res.json().catch(() => null);
         throw new Error(data?.message ?? "Erreur lors de l'enregistrement");
@@ -153,7 +156,12 @@ export function CreateQuestionDialog({ open, onOpenChange, question }: Props) {
 
         {/* Réponses */}
         <div className="flex flex-col gap-2">
-          <Label>Réponses <span className="text-muted-foreground text-xs">(sélectionnez la bonne)</span></Label>
+          <Label>
+            Réponses{" "}
+            <span className="text-muted-foreground text-xs">
+              (sélectionnez la bonne)
+            </span>
+          </Label>
           <div className="flex flex-col gap-2">
             {answers.map((answer, i) => (
               <div key={i} className="flex items-center gap-3">
@@ -170,7 +178,11 @@ export function CreateQuestionDialog({ open, onOpenChange, question }: Props) {
                   onChange={(e) => setAnswerText(i, e.target.value)}
                   placeholder={`Réponse ${i + 1}`}
                   required
-                  className={answer.isCorrect ? "border-green-500 focus-visible:ring-green-500" : ""}
+                  className={
+                    answer.isCorrect
+                      ? "border-green-500 focus-visible:ring-green-500"
+                      : ""
+                  }
                 />
               </div>
             ))}
@@ -191,7 +203,11 @@ export function CreateQuestionDialog({ open, onOpenChange, question }: Props) {
             Annuler
           </Button>
           <Button type="submit" disabled={loading}>
-            {loading ? "Enregistrement..." : question ? "Mettre à jour" : "Créer"}
+            {loading
+              ? "Enregistrement..."
+              : question
+                ? "Mettre à jour"
+                : "Créer"}
           </Button>
         </div>
       </form>
